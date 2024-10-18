@@ -1,6 +1,7 @@
 "use client";
 
 import Post from "@/components/posts/Post";
+import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkelton";
 import { Button } from "@/components/ui/button";
 import InfiniteScrollContainer from "@/components/ui/infiniteScrollContainer";
 import kyInstance from "@/lib/ky";
@@ -31,9 +32,17 @@ export default function ForYouFeed() {
     
       const posts = data?.pages.flatMap((page) => page.posts) || [];
 
-    if(status === "pending"){
-        return <Loader2 className="mx-auto animate-spin" />;
-    }
+      if (status === "pending") {
+        return <PostsLoadingSkeleton />;
+      }
+    
+      if (status === "success" && !posts.length && !hasNextPage) {
+        return (
+          <p className="text-center text-muted-foreground">
+            No one has posted anything yet.
+          </p>
+        );
+      }
 
     if(status === "error"){
         return <p className="text-center text-destructive">Failed to fetch posts</p>
