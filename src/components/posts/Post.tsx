@@ -1,3 +1,5 @@
+"use client";
+
 import { PostData } from "@/lib/types";
 import { cn, formatRelativeDate } from "@/lib/utils";
 import Link from "next/link";
@@ -36,6 +38,7 @@ export default function Post({ post }: PostProps) {
           <Link
             href={`/posts/${post.id}`}
             className="block text-sm text-muted-foreground hover:underline"
+            suppressHydrationWarning
           >
             {formatRelativeDate(post.createdAt)}
           </Link>
