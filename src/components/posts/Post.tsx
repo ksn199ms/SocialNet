@@ -11,6 +11,7 @@ import Linkify from "../ui/Linkify";
 import Image from "next/image";
 import { Media } from "@prisma/client";
 import LikeButton from "./LikeButton";
+import BookmarkButton from "./BookmarkButton";
 
 interface PostProps {
   post: PostData;
@@ -21,31 +22,31 @@ export default function Post({ post }: PostProps) {
   return (
     <article className="group/post space-y-3 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex justify-between gap-3">
-      <div className="flex flex-wrap gap-3">
-        <UserTooltip user={post.user}>
-        <Link href={`/users/${post.user.username}`}>
-          <UserAvatar avatarUrl={post.user.avatarUrl} />
-        </Link>
-        </UserTooltip>
-        <div>
-        <UserTooltip user={post.user}>
-          <Link
-            href={`/users/${post.user.username}`}
-            className="block font-medium hover:underline"
-          >
-            {post.user.displayName}
-          </Link>
+        <div className="flex flex-wrap gap-3">
+          <UserTooltip user={post.user}>
+            <Link href={`/users/${post.user.username}`}>
+              <UserAvatar avatarUrl={post.user.avatarUrl} />
+            </Link>
           </UserTooltip>
-          <Link
-            href={`/posts/${post.id}`}
-            className="block text-sm text-muted-foreground hover:underline"
-            suppressHydrationWarning
-          >
-            {formatRelativeDate(post.createdAt)}
-          </Link>
+          <div>
+            <UserTooltip user={post.user}>
+              <Link
+                href={`/users/${post.user.username}`}
+                className="block font-medium hover:underline"
+              >
+                {post.user.displayName}
+              </Link>
+            </UserTooltip>
+            <Link
+              href={`/posts/${post.id}`}
+              className="block text-sm text-muted-foreground hover:underline"
+              suppressHydrationWarning
+            >
+              {formatRelativeDate(post.createdAt)}
+            </Link>
+          </div>
         </div>
-      </div>
-      {post.user.id === user.id && (
+        {post.user.id === user.id && (
           <PostMoreButton
             post={post}
             className="opacity-0 transition-opacity group-hover/post:opacity-100"
@@ -53,19 +54,30 @@ export default function Post({ post }: PostProps) {
         )}
       </div>
       <Linkify>
-      <div className="whitespace-pre-line break-words">{post.content}</div>
+        <div className="whitespace-pre-line break-words">{post.content}</div>
       </Linkify>
       {!!post.attachments.length && (
         <MediaPreviews attachments={post.attachments} />
       )}
       <hr className="text-muted-foreground" />
-      <LikeButton 
-      postId={post.id}
-      initialState={{
-        likes: post._count.likes,
-        isLikedByUser: post.likes.some((like) => like.userId === user.id)
-      }}
-      />
+      <div className="flex justify-between gap-5">
+        <LikeButton
+          postId={post.id}
+          initialState={{
+            likes: post._count.likes,
+            isLikedByUser: post.likes.some((like) => like.userId === user.id),
+          }}
+        />
+
+        <BookmarkButton
+          postId={post.id}
+          initialState={{
+            isBookmarkedByUser: post.bookmarks.some(
+              (bookmark) => bookmark.userId === user.id,
+            ),
+          }}
+        />
+      </div>
     </article>
   );
 }
