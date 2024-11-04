@@ -3,6 +3,7 @@ import signUpImage from "@/assets/signup-image.jpg";
 import Image from "next/image";
 import Link from "next/link";
 import SignUpForm from "./SignUpForm";
+import GoogleSignUpButton from "./GoogleSignUpButton";
 
 export const metadata: Metadata = {
   title: "Sign Up",
@@ -21,6 +22,12 @@ export default function Page() {
             </p>
           </div>
           <div className="space-y-5">
+          <GoogleSignUpButton/>
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-muted" />
+              <span>OR</span>
+              <div className="h-px flex-1 bg-muted" />
+            </div>
             <SignUpForm /> 
             <Link href="/login" className="block text-center hover:underline">Already have an account? Login</Link>
           </div>
